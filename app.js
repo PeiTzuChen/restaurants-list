@@ -29,7 +29,7 @@ app.get('/search', (req, res) => {
     res.render('notfound');
   }
   else {
-    res.render('index',{restaurants:restaurantsFiltered});
+    res.render('index',{restaurants:restaurantsFiltered,searchTerm});
   }
   
 });
