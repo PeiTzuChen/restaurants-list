@@ -20,6 +20,20 @@ app.get('/restaurants/:id', (req,res) => {
 res.render('detail',{restaurant})
 })
 
+app.get('/search', (req, res) => {
+  const searchTerm = req.query.keyword.trim().toLowerCase(); 
+  const restaurantsFiltered = restaurants.filter(element => 
+    element.category.toLowerCase().includes(searchTerm) || element.name.toLowerCase().includes(searchTerm) )
+
+  if (restaurantsFiltered.length === 0) {
+    res.render('notfound');
+  }
+  else {
+    res.render('index',{restaurants:restaurantsFiltered});
+  }
+  
+});
+
 app.listen(port, ()=> {
 console.log(`express server listening on port ${port}`)
 })
