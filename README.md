@@ -10,7 +10,7 @@ A simple web application for searching restaurant in the favorite list
 Type the name or category of the restaurants in search bar
 
 ![listening page](https://github.com/PeiTzuChen/restaurants-list/blob/main/Image/listening%20page.jpg)
-![searching page](Image/searching page.jpg)
+![searching page](https://github.com/PeiTzuChen/restaurants-list/blob/fac9e2b175c089102829b46abf1be17b55db949b/Image/searching%20page.jpg)
 
 ### Getting started
 #### Installing
