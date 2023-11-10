@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
   }
   Restaurant.init({
     name: DataTypes.STRING,
@@ -19,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
     category: DataTypes.STRING,
     image: DataTypes.STRING,
     location: DataTypes.STRING,
-    phone: DataTypes.INTEGER,
+    phone: DataTypes.STRING,
     google_map: DataTypes.STRING,
     rating: DataTypes.FLOAT,
     description: DataTypes.TEXT

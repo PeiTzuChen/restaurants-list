@@ -2,14 +2,14 @@ const express = require("express");
 const port = 3000;
 const app = express();
 const { engine } = require("express-handlebars");
-const db = require("./models")
-const Restaurant = db.Restaurant
+const db = require("./models");
+const Restaurant = db.Restaurant;
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
 app.set("views", "./views");
 
-app.use(express.static("./public"));
+app.use(express.static("public"));
 const restaurants = require("./public/jsons/restaurant.json").results;
 
 app.get("/", (req, res) => {
