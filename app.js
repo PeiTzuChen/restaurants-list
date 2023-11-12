@@ -4,27 +4,21 @@ const app = express();
 const { engine } = require("express-handlebars");
 const db = require("./models");
 const Restaurant = db.Restaurant;
+const methodOverride = require("method-override");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
 app.set("views", "./views");
 
 app.use(express.static("public"));
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
   return Restaurant.findAll({
     raw: true,
   })
     .then((restaurants) => res.render("index", { restaurants }))
-    .catch((err) => console.log(err));
-});
-
-app.get("/restaurants/:id", (req, res) => {
-  const id = req.params.id;
-  return Restaurant.findByPk(id, {
-    raw: true,
-  })
-    .then((restaurant) => res.render("detail", { restaurant }))
     .catch((err) => console.log(err));
 });
 
@@ -44,6 +38,42 @@ app.get("/search", (req, res) => {
     .catch((err) => console.log(err));
 });
 
+app.get("/restaurants/:id", (req, res) => {
+  const id = req.params.id;
+  return Restaurant.findByPk(id, {
+    raw: true,
+  })
+    .then((restaurant) => res.render("detail", { restaurant }))
+    .catch((err) => console.log(err));
+});
+
+app.get("/restaurants/:id/edit", (req, res) => {
+  const id = req.params.id;
+  return Restaurant.findByPk(id, {
+    raw: true,
+  })
+    .then((restaurant) => res.render("edit", { restaurant }))
+    .catch((err) => console.log(err));
+});
+
+app.put("/restaurants/:id", (req, res) => {
+  const id = req.params.id;
+  const body = req.body;
+  return Restaurant.update(
+    {
+      name: body.name,
+      category: body.category,
+      location: body.location,
+      google_map: body.google_map,
+      phone: body.phone,
+      description: body.description,
+      image: body.image,
+    },
+    { where: { id } }
+  )
+    .then(() => res.redirect(`/restaurants/${id}`))
+    .catch((err) => console.log(err));
+});
 app.listen(port, () => {
   console.log(`express server listening on http://localhost:${port}`);
 });

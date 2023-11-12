@@ -1,0 +1,75 @@
+<form action="/restaurants/{{restaurant.id}}?_method=PUT" method="POST">
+  <div class="mb-1 restaurant-show-title"><input
+      type="text"
+      name="name"
+      value="{{restaurant.name}}"
+    /></div>
+
+  <div class="mb-1 restaurant-show-title"> </div>
+
+  <div class="row">
+    <div class="col-12 col-md-10 mx-auto">
+
+      <p class="mb-1">
+        <span class="text-secondary">
+          <i class="fas fa-utensils pr-2"></i>
+          類別：
+        </span>
+        <input type="text" name="category" value="{{restaurant.category}}" />
+
+      </p>
+
+      <p class="mb-1">
+        <span class="text-secondary">
+          <i class="fas fa-map-marker-alt pr-2"></i>
+          地址：
+        </span>
+        <input
+          type="text"
+          name="location"
+          value="{{restaurant.location}}"
+          size="40"
+        />
+        <i class="fas fa-location-arrow pr-2 fa-xs"></i>
+        <span class="text-secondary">google map link</span>
+        <input
+          type="link"
+          name="google_map"
+          value="{{restaurant.google_map}}"
+          size="40"
+        />
+      </p>
+
+      <p class="mb-1">
+        <span class="text-secondary">
+          <i class="fas fa-mobile-alt pr-2"></i>
+          電話：
+        </span>
+        <input type="tel" name="phone" value="{{restaurant.phone}}" />
+      </p>
+
+      <p class="mb-1">
+        <input
+          type="text"
+          name="description"
+          value="{{restaurant.description}}"
+          size="100"
+        />
+      </p>
+
+      <p><span class="text-secondary">
+          <i class="fas fa-solid fa-image"></i>
+          照片連結：
+          <input
+          type="text"
+          name="image"
+          value="{{restaurant.image}}"
+          size="100"
+        />
+        </span></p>
+
+    </div>
+  </div>
+  <div class="text-center"><button type="submit" class="btn btn-outline-secondary btn-sm">儲存</button></div>
+  
+</form>
