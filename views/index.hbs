@@ -25,7 +25,7 @@
   </div>
 </div>
 <div class="text-center mt-4">
-  <form action="/restaurants/{{restaurant.id}}" style="display: inline;"><button
+  <form action="/restaurants/new" method="get" style="display: inline;"><button
       type="submit"
       class="btn btn-outline-secondary btn-sm"
     >新增餐廳</button></form></div>
@@ -74,15 +74,22 @@
                   >編輯</button></form>
                 <form
                   action="/restaurants/{{restaurant.id}}"
+                  method="get"
                   style="display: inline;"
                 ><button
                     type="submit"
                     class="btn btn-outline-secondary btn-sm"
                   >詳細資料</button></form>
-                <button
-                  type="button"
-                  class="btn btn-outline-danger btn-sm"
-                >刪除</button>
+
+                <form
+                  action="/restaurants/{{restaurant.id}}?_method=DELETE"
+                  method="POST"
+                  style="display: inline;"
+                ><button
+                    type="submit"
+                    class="btn btn-outline-danger btn-sm"
+                  >刪除</button>
+                </form>
               </div>
             </div>
           {{/each}}
