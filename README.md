@@ -1,7 +1,7 @@
 # Restaurant List
 A simple web application for organizing favorite restaurant by searching, creating and deleting restaurant.
 
-![listening page](./screen%20capture/listening%20page.png)
+![listening page](https://github.com/PeiTzuChen/restaurants-list/blob/main/Image/restaurant.jpg)
 
 ## Features
 - Searching restaurants by name or category
