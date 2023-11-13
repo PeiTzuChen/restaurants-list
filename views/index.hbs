@@ -30,9 +30,8 @@
       class="btn btn-outline-secondary btn-sm"
     >新增餐廳</button></form></div>
 
-{{#if restaurants}}
 
-  <!-- restaurant list -->
+{{#if restaurants}}
   <div class="container mt-3">
     <div class="row">
       <div class="col-md-10 col-12 mx-auto">
@@ -99,6 +98,7 @@
     </div>
   </div>
 
-{{else}}
+{{!-- 如果找不到餐廳資料跳出提示 --}}
+{{else}}  
   <h3 class="text-center mt-5">查無相關資料，請重新輸入</h3>
 {{/if}}

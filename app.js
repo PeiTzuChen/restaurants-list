@@ -14,7 +14,7 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-app.get("/", (req, res) => {
+app.get("/", (req, res) => { //listening page
   return Restaurant.findAll({
     raw: true,
   })
@@ -22,7 +22,7 @@ app.get("/", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.get("/search", (req, res) => {
+app.get("/search", (req, res) => { //searching page
   const searchTerm = req.query.keyword.trim().toLowerCase();
   return Restaurant.findAll({
     raw: true,
@@ -38,11 +38,11 @@ app.get("/search", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.get("/restaurants/new", (req, res) => {
+app.get("/restaurants/new", (req, res) => { //create restaurant page
   res.render("new");
 });
 
-app.get("/restaurants/:id", (req, res) => {
+app.get("/restaurants/:id", (req, res) => { //restaurant detail page 
   const id = req.params.id;
   return Restaurant.findByPk(id, {
     raw: true,
@@ -51,7 +51,7 @@ app.get("/restaurants/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.get("/restaurants/:id/edit", (req, res) => {
+app.get("/restaurants/:id/edit", (req, res) => {  // edit restaurant page
   const id = req.params.id;
   return Restaurant.findByPk(id, {
     raw: true,
@@ -60,7 +60,7 @@ app.get("/restaurants/:id/edit", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.post("/restaurants", (req, res) => {
+app.post("/restaurants", (req, res) => { //create restaurant
   const restaurant = req.body;
   const rating = Number(restaurant.rating);
   return Restaurant.create({
@@ -78,7 +78,7 @@ app.post("/restaurants", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.put("/restaurants/:id", (req, res) => {
+app.put("/restaurants/:id", (req, res) => { //edit restaurant
   const id = req.params.id;
   const body = req.body;
   return Restaurant.update(
@@ -97,7 +97,7 @@ app.put("/restaurants/:id", (req, res) => {
     .catch((err) => console.log(err));
 });
 
-app.delete('/restaurants/:id', (req,res) => {
+app.delete('/restaurants/:id', (req,res) => { //delete restaurant
    const id = req.params.id;
    return Restaurant.destroy({ where: { id } })
      .then(() => res.redirect("/"))
