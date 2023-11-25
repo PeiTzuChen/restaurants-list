@@ -14,7 +14,8 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 
-app.get("/", (req, res) => { //listening page
+app.get("/", (req, res) => {
+  //listening page
   return Restaurant.findAll({
     raw: true,
   })
@@ -22,10 +23,45 @@ app.get("/", (req, res) => { //listening page
     .catch((err) => console.log(err));
 });
 
-app.get("/search", (req, res) => { //searching page
-  const searchTerm = req.query.keyword.trim().toLowerCase();
+app.get("/search", (req, res) => {
+  //searching page
+  const { keyword, order } = req.query;
+  const searchTerm = keyword.trim().toLowerCase();
+  let orderState = [];
+  let orderValue = {};
+  switch (order) {
+    case "none":
+      orderState = ["id"];
+      orderValue.none = true;
+      break;
+    case "AtoZ":
+      orderState = ["name_en"];
+      orderValue.AtoZ = true;
+      break;
+    case "ZtoA":
+      orderState = ["name_en", "DESC"];
+      orderValue.ZtoA = true;
+      break;
+    case "category":
+      orderState = ["category"];
+      orderValue.category = true;
+      break;
+    case "location":
+      orderState = ["location"];
+      orderValue.location = true;
+      break;
+    case "ratingDESC":
+      orderState = ["rating", "DESC"];
+      orderValue.ratingDESC = true;
+      break;
+    case "ratingASC":
+      orderState = ["rating"];
+      orderValue.ratingASC = true;
+      break;
+  }
   return Restaurant.findAll({
     raw: true,
+    order: [orderState],
   })
     .then((restaurants) => {
       const restaurantsFiltered = restaurants.filter(
@@ -33,16 +69,22 @@ app.get("/search", (req, res) => { //searching page
           restaurant.category.toLowerCase().includes(searchTerm) ||
           restaurant.name.toLowerCase().includes(searchTerm)
       );
-      res.render("index", { restaurants: restaurantsFiltered, searchTerm });
+      res.render("index", {
+        restaurants: restaurantsFiltered,
+        searchTerm,
+        orderValue,
+      });
     })
     .catch((err) => console.log(err));
 });
 
-app.get("/restaurants/new", (req, res) => { //create restaurant page
+app.get("/restaurants/new", (req, res) => {
+  //create restaurant page
   res.render("new");
 });
 
-app.get("/restaurants/:id", (req, res) => { //restaurant detail page 
+app.get("/restaurants/:id", (req, res) => {
+  //restaurant detail page
   const id = req.params.id;
   return Restaurant.findByPk(id, {
     raw: true,
@@ -51,7 +93,8 @@ app.get("/restaurants/:id", (req, res) => { //restaurant detail page
     .catch((err) => console.log(err));
 });
 
-app.get("/restaurants/:id/edit", (req, res) => {  // edit restaurant page
+app.get("/restaurants/:id/edit", (req, res) => {
+  // edit restaurant page
   const id = req.params.id;
   return Restaurant.findByPk(id, {
     raw: true,
@@ -60,7 +103,8 @@ app.get("/restaurants/:id/edit", (req, res) => {  // edit restaurant page
     .catch((err) => console.log(err));
 });
 
-app.post("/restaurants", (req, res) => { //create restaurant
+app.post("/restaurants", (req, res) => {
+  //create restaurant
   const restaurant = req.body;
   const rating = Number(restaurant.rating);
   return Restaurant.create({
@@ -78,7 +122,8 @@ app.post("/restaurants", (req, res) => { //create restaurant
     .catch((err) => console.log(err));
 });
 
-app.put("/restaurants/:id", (req, res) => { //edit restaurant
+app.put("/restaurants/:id", (req, res) => {
+  //edit restaurant
   const id = req.params.id;
   const body = req.body;
   return Restaurant.update(
@@ -97,12 +142,13 @@ app.put("/restaurants/:id", (req, res) => { //edit restaurant
     .catch((err) => console.log(err));
 });
 
-app.delete('/restaurants/:id', (req,res) => { //delete restaurant
-   const id = req.params.id;
-   return Restaurant.destroy({ where: { id } })
-     .then(() => res.redirect("/"))
-     .catch((err) => console.log(err));
-})
+app.delete("/restaurants/:id", (req, res) => {
+  //delete restaurant
+  const id = req.params.id;
+  return Restaurant.destroy({ where: { id } })
+    .then(() => res.redirect("/"))
+    .catch((err) => console.log(err));
+});
 app.listen(port, () => {
   console.log(`express server listening on http://localhost:${port}`);
 });

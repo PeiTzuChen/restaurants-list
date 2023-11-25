@@ -2,22 +2,38 @@
 <div class="container search-bar">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
-      <form action="/search">
-        <h4 class="mb-2">尋找餐廳：</h4>
-        <div class="input-group">
-          <input
-            type="text"
-            name="keyword"
-            class="form-control"
-            placeholder="輸入餐廳、分類"
-            aria-label="Restaurant Name..."
-            value="{{searchTerm}}"
-            aria-describedby="search-button"
-          />
-          <div class="input-group-append">
-            <button class="btn btn-major" type="submit" id="search-button"><i
-                class="fas fa-search"
-              ></i></button>
+
+      <h4 class="mb-2">尋找餐廳：</h4>
+      <form action="/search" method="GET" id="search-form">
+        <div class="d-flex flex-row">
+
+          <div class="input-group me-5">
+            <input
+              type="text"
+              name="keyword"
+              class="form-control"
+              placeholder="輸入餐廳、分類"
+              aria-label="Restaurant Name..."
+              value="{{searchTerm}}"
+              aria-describedby="search-button"
+            />
+            <div class="input-group-append">
+              <button class="btn btn-major" type="submit" id="search-button"><i
+                  class="fas fa-search"
+                ></i></button></div>
+          </div>
+
+          <div class="input-group justify-content-end">
+            <label for="order"></label>
+            <select name="order" id="order" class="flex-fill">
+              <option value="none"{{#if orderValue.none}}selected {{/if}}>排列方式</option>
+              <option value="AtoZ"{{#if orderValue.AtoZ}}selected {{/if}}>依名稱(A-Z)</option>
+              <option value="ZtoA" {{#if orderValue.ZtoA}}selected {{/if}}>依名稱(Z-A)</option>
+              <option value="category" {{#if orderValue.category}}selected {{/if}}>依類別</option>
+              <option value="location" {{#if orderValue.location}}selected {{/if}}>依地區</option>
+              <option value="ratingDESC" {{#if orderValue.ratingDESC}}selected {{/if}}>依評分(高-低)</option>
+              <option value="ratingASC" {{#if orderValue.ratingASC}}selected {{/if}}>依評分(低-高)</option>
+            </select>
           </div>
         </div>
       </form>
@@ -29,7 +45,6 @@
       type="submit"
       class="btn btn-outline-secondary btn-sm"
     >新增餐廳</button></form></div>
-
 
 {{#if restaurants}}
   <div class="container mt-3">
@@ -97,8 +112,9 @@
       </div>
     </div>
   </div>
+ 
 
-{{!-- 如果找不到餐廳資料跳出提示 --}}
-{{else}}  
+  {{! 如果找不到餐廳資料跳出提示 }}
+{{else}}
   <h3 class="text-center mt-5">查無相關資料，請重新輸入</h3>
 {{/if}}
