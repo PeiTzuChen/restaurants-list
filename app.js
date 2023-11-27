@@ -16,20 +16,34 @@ app.use(methodOverride("_method"));
 
 app.get("/", (req, res) => {
   //listening page
-  return Restaurant.findAll({
+  const pageSize = 6;
+  const pageNumber = parseInt(req.query.page) || 1;
+  return Restaurant.findAndCountAll({
     raw: true,
+    limit: pageSize,
+    offset: (pageNumber - 1) * pageSize,
   })
-    .then((restaurants) => res.render("index", { restaurants }))
+    .then((restaurants) => {
+      const totalPage = Math.ceil(restaurants.count / pageSize);
+      res.render("index", {
+        restaurants: restaurants.rows,
+        totalPage: totalPage,
+        page: pageNumber,
+        prev: pageNumber > 1 ? pageNumber - 1 : pageNumber,
+        next: pageNumber < totalPage ? pageNumber + 1 : pageNumber,
+      });
+    })
     .catch((err) => console.log(err));
 });
 
 app.get("/search", (req, res) => {
   //searching page
-  const { keyword, order } = req.query;
+  const { keyword, order, page } = req.query;
   const searchTerm = keyword.trim().toLowerCase();
+  const pageNumber = parseInt(page) || 1;
   let orderState = [];
   let orderValue = {};
-  switch (order) {
+  switch (order) { //不同排列方式有不同取得資料庫的關鍵字，orderValue是為了點選後能保留結果而設計的參數
     case "none":
       orderState = ["id"];
       orderValue.none = true;
@@ -69,10 +83,20 @@ app.get("/search", (req, res) => {
           restaurant.category.toLowerCase().includes(searchTerm) ||
           restaurant.name.toLowerCase().includes(searchTerm)
       );
+      const pagesize = 6;
+      const totalPage = Math.ceil(restaurantsFiltered.length / pagesize);
       res.render("index", {
-        restaurants: restaurantsFiltered,
+        restaurants: restaurantsFiltered.slice(
+          (pageNumber - 1) * pagesize,
+          (pageNumber - 1) * pagesize + 6
+        ),
         searchTerm,
+        order,
         orderValue,
+        page: pageNumber,
+        totalPage,
+        prev: pageNumber > 1 ? pageNumber - 1 : pageNumber,
+        next: pageNumber < totalPage ? pageNumber + 1 : pageNumber,
       });
     })
     .catch((err) => console.log(err));

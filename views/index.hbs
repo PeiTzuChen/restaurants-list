@@ -6,13 +6,12 @@
       <h4 class="mb-2">尋找餐廳：</h4>
       <form action="/search" method="GET" id="search-form">
         <div class="d-flex flex-row">
-
           <div class="input-group me-5">
             <input
               type="text"
               name="keyword"
               class="form-control"
-              placeholder="輸入餐廳、分類"
+              placeholder="輸入餐廳名稱、分類"
               aria-label="Restaurant Name..."
               value="{{searchTerm}}"
               aria-describedby="search-button"
@@ -37,6 +36,8 @@
           </div>
         </div>
       </form>
+<p class="mb-0">* 分類項目：中東料理、日本料理、義式餐廳、美式、酒吧、咖啡</p>
+
     </div>
   </div>
 </div>
@@ -107,7 +108,6 @@
               </div>
             </div>
           {{/each}}
-
         </div>
       </div>
     </div>
@@ -118,3 +118,44 @@
 {{else}}
   <h3 class="text-center mt-5">查無相關資料，請重新輸入</h3>
 {{/if}}
+
+{{!-- 如果搜尋bar有關鍵字，則渲染特定資料的pagination --}}
+  {{#if searchTerm}}
+<div class="mx-auto text-center mb-5 mt-3" style="width: 400px;">
+      <form action="/search" method="GET" style="display: inline;">
+       <input type="hidden" name="keyword" value="{{searchTerm}}" />
+        <input type="hidden" name="order" value="{{order}}" />
+        <input type="hidden" name="page" value="{{prev}}" />
+        <button type="submit" class="btn btn-secondary btn-sm">上一頁</button>
+      </form>
+      <form id="page-form" action="/search" method="GET" style="display: inline;">
+       <input type="hidden" name="keyword" value="{{searchTerm}}" />
+        <input type="hidden" name="order" value="{{order}}" />
+      <input id="page-number" type="number" min="1" max="{{totalPage}}" name="page" value="{{page}}" style="width: 12%">
+      <span > / {{totalPage}}</span>
+      </form>
+      <form action="/search" method="GET" style="display: inline;">
+        <input type="hidden" name="keyword" value="{{searchTerm}}" />
+        <input type="hidden" name="order" value="{{order}}" />
+           <input type="hidden" name="page" value="{{next}}" />
+        <button type="submit" class="btn btn-secondary btn-sm">下一頁</button>
+      </form>
+  </div>
+
+{{!-- 如果搜尋bar沒有關鍵字，則渲染全部的頁碼 --}}
+  {{else}}  
+<div class="mx-auto text-center mb-5 mt-3" style="width: 400px;">
+      <form action="/" method="GET" style="display: inline;">
+        <input type="hidden" name="page" value="{{prev}}" />
+        <button type="submit" class="btn btn-secondary btn-sm">上一頁</button>
+      </form>
+      <form id="page-form" action="/" method="GET" style="display: inline;">
+      <input id="page-number" type="number" min="1" max="{{totalPage}}" name="page" value="{{page}}" style="width: 12%">
+      <span > / {{totalPage}}</span>
+      </form>
+      <form action="/" method="GET" style="display: inline;">
+        <input type="hidden" name="page" value="{{next}}" />
+        <button type="submit" class="btn btn-secondary btn-sm">下一頁</button>
+      </form>
+  </div>
+  {{/if}}
