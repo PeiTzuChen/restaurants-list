@@ -5,6 +5,8 @@ const { engine } = require("express-handlebars");
 const db = require("./models");
 const Restaurant = db.Restaurant;
 const methodOverride = require("method-override");
+const flash = require("connect-flash");
+const session = require("express-session");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
@@ -13,6 +15,14 @@ app.set("views", "./views");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
+app.use(
+  session({
+    secret: "ThisIsSecret",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(flash());
 
 app.get("/", (req, res) => {
   //listening page
@@ -31,9 +41,11 @@ app.get("/", (req, res) => {
         page: pageNumber,
         prev: pageNumber > 1 ? pageNumber - 1 : pageNumber,
         next: pageNumber < totalPage ? pageNumber + 1 : pageNumber,
+        message: req.flash("success"),
+        error: req.flash('error_msg')
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 });
 
 app.get("/search", (req, res) => {
@@ -43,7 +55,9 @@ app.get("/search", (req, res) => {
   const pageNumber = parseInt(page) || 1;
   let orderState = [];
   let orderValue = {};
-  switch (order) { //不同排列方式有不同取得資料庫的關鍵字，orderValue是為了點選後能保留結果而設計的參數
+  switch (
+    order //不同排列方式有不同取得資料庫的關鍵字，orderValue是為了點選後能保留結果而設計的參數
+  ) {
     case "none":
       orderState = ["id"];
       orderValue.none = true;
@@ -78,6 +92,7 @@ app.get("/search", (req, res) => {
     order: [orderState],
   })
     .then((restaurants) => {
+      req.flash("success", "找出符合查詢結果如下");
       const restaurantsFiltered = restaurants.filter(
         (restaurant) =>
           restaurant.category.toLowerCase().includes(searchTerm) ||
@@ -97,14 +112,15 @@ app.get("/search", (req, res) => {
         totalPage,
         prev: pageNumber > 1 ? pageNumber - 1 : pageNumber,
         next: pageNumber < totalPage ? pageNumber + 1 : pageNumber,
+        message_onsearch: req.flash('success')
       });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => console.error(err));
 });
 
 app.get("/restaurants/new", (req, res) => {
   //create restaurant page
-  res.render("new");
+  res.render("new",{error:req.flash('error_msg')});
 });
 
 app.get("/restaurants/:id", (req, res) => {
@@ -113,8 +129,13 @@ app.get("/restaurants/:id", (req, res) => {
   return Restaurant.findByPk(id, {
     raw: true,
   })
-    .then((restaurant) => res.render("detail", { restaurant }))
-    .catch((err) => console.log(err));
+    .then((restaurant) => {
+      res.render("detail", {
+        restaurant,
+        message: req.flash("success"),
+      });
+    })
+    .catch((err) => console.error(err));
 });
 
 app.get("/restaurants/:id/edit", (req, res) => {
@@ -123,8 +144,10 @@ app.get("/restaurants/:id/edit", (req, res) => {
   return Restaurant.findByPk(id, {
     raw: true,
   })
-    .then((restaurant) => res.render("edit", { restaurant }))
-    .catch((err) => console.log(err));
+    .then((restaurant) => {
+      return res.render("edit", { restaurant, error: req.flash("error_msg") });
+    })
+    .catch((err) => console.error(err));
 });
 
 app.post("/restaurants", (req, res) => {
@@ -142,8 +165,15 @@ app.post("/restaurants", (req, res) => {
     rating: rating,
     description: restaurant.description,
   })
-    .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
+    .then(() => {
+      req.flash("success", "新增成功");
+      return res.redirect("/");
+    })
+    .catch((err) => {
+      console.error(err);
+      req.flash("error_msg", "新增失敗");
+      return res.redirect("back");
+    });
 });
 
 app.put("/restaurants/:id", (req, res) => {
@@ -162,16 +192,30 @@ app.put("/restaurants/:id", (req, res) => {
     },
     { where: { id } }
   )
-    .then(() => res.redirect(`/restaurants/${id}`))
-    .catch((err) => console.log(err));
+    .then(() => {
+      req.flash("success", "編輯成功");
+      return res.redirect(`/restaurants/${id}`);
+    })
+    .catch((err) => {
+      console.error(err);
+      req.flash("error_msg", "編輯失敗");
+      return res.redirect("back");
+    });
 });
 
 app.delete("/restaurants/:id", (req, res) => {
   //delete restaurant
   const id = req.params.id;
   return Restaurant.destroy({ where: { id } })
-    .then(() => res.redirect("/"))
-    .catch((err) => console.log(err));
+    .then(() => {
+      req.flash("success", "刪除成功");
+      return res.redirect("/");
+    })
+    .catch((err) => {
+      console.error(err);
+      req.flash("error_msg", "刪除失敗");
+      return res.redirect("back");
+    });
 });
 app.listen(port, () => {
   console.log(`express server listening on http://localhost:${port}`);

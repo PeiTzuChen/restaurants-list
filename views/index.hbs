@@ -41,6 +41,12 @@
     </div>
   </div>
 </div>
+
+<div id="flash-message" class="text-center mt-3 ">{{message}}{{error}}</div>
+{{#if restaurants}}
+<div class="text-center mb-3 mt-3">{{message_onsearch}}</div>
+{{/if}}
+
 <div class="text-center mt-4">
   <form action="/restaurants/new" method="get" style="display: inline;"><button
       type="submit"
@@ -159,3 +165,5 @@
       </form>
   </div>
   {{/if}}
+
+   <script src="javascripts/index.js"></script>
