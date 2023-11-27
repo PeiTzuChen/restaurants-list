@@ -1,6 +1,6 @@
 <h1 class="mb-1 restaurant-show-title">{{restaurant.name}}</h1>
 
-<div id="flash-message" class="text-center mb-4">{{message}}</div>
+{{#if message}}<div id="flash-message" class="text-center mb-4">{{message}}</div>{{/if}}
 
 <div class="container">
   <div class="row">
@@ -54,5 +54,5 @@
 <script>
   const flash = document.querySelector("#flash-message");
   setTimeout(() => {
-  flash.remove() }, 2000);
+  flash.remove() }, 1000);
 </script>

@@ -6,7 +6,6 @@ const pageForm = document.querySelector("#page-form");
 const pageNumber = document.querySelector("#page-number");
 const flash = document.querySelector("#flash-message")
 
-console.log(flash)
 // 如果order list有改變值，提交表單
 select.addEventListener("change", (event) => {
   form.submit()
@@ -20,4 +19,4 @@ pageNumber.addEventListener("change", (event) => {
 //提示出現2秒就消失
  setTimeout(() => {
   flash.remove()
- }, 2000);
+ }, 1000);
