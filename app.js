@@ -5,7 +5,9 @@ const { engine } = require("express-handlebars");
 const methodOverride = require("method-override");
 const flash = require("connect-flash");
 const session = require("express-session");
-const router = require("./routes")
+const messageHandler = require("./middlewares/messageHandler")
+const router = require("./routes");
+
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
@@ -22,7 +24,10 @@ app.use(
   })
 );
 app.use(flash());
+
+app.use(messageHandler);
 app.use(router)
+
 
 app.listen(port, () => {
   console.log(`express server listening on http://localhost:${port}`);

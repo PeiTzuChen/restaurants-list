@@ -7,6 +7,7 @@ router.use(express.static("public"));
 
 router.get("/", (req, res) => {
   //listening page
+  console.log('進入router')
   const pageSize = 6;
   const pageNumber = parseInt(req.query.page) || 1;
   return Restaurant.findAndCountAll({
@@ -16,14 +17,14 @@ router.get("/", (req, res) => {
   })
     .then((restaurants) => {
       const totalPage = Math.ceil(restaurants.count / pageSize);
-      res.render("main", {
+      res.render("listening", {
         restaurants: restaurants.rows,
         totalPage: totalPage,
         page: pageNumber,
         prev: pageNumber > 1 ? pageNumber - 1 : pageNumber,
         next: pageNumber < totalPage ? pageNumber + 1 : pageNumber,
-        message: req.flash("success"),
-        error: req.flash("error_msg"),
+        // success: req.flash("success"),
+        // error: req.flash("error_msg"),
       });
     })
     .catch((err) => console.error(err));
@@ -81,7 +82,7 @@ router.get("/search", (req, res) => {
       );
       const pagesize = 6;
       const totalPage = Math.ceil(restaurantsFiltered.length / pagesize);
-      res.render("main", {
+      res.render("listening", {
         restaurants: restaurantsFiltered.slice(
           (pageNumber - 1) * pagesize,
           (pageNumber - 1) * pagesize + 6
@@ -93,7 +94,7 @@ router.get("/search", (req, res) => {
         totalPage,
         prev: pageNumber > 1 ? pageNumber - 1 : pageNumber,
         next: pageNumber < totalPage ? pageNumber + 1 : pageNumber,
-        message_onsearch: req.flash("success"),
+        // message_onsearch: req.flash("success"),
       });
     })
     .catch((err) => console.error(err));
@@ -113,7 +114,7 @@ router.get("/:id", (req, res) => {
     .then((restaurant) => {
       res.render("detail", {
         restaurant,
-        message: req.flash("success"),
+        // success: req.flash("success"),
       });
     })
     .catch((err) => console.error(err));
