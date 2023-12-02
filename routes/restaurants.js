@@ -5,6 +5,7 @@ const Restaurant = db.Restaurant;
 
 router.get("/", (req, res, next) => {
   //listening page
+  console.log('進入router')
   const pageSize = 6;
   const pageNumber = parseInt(req.query.page) || 1;
   return Restaurant.findAndCountAll({
