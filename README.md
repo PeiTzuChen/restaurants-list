@@ -5,7 +5,7 @@ A simple web application for organizing favorite restaurant by searching, creati
 
 ## Features
 - Searching restaurants by name or category
-- restaurant can be sorted by English name, region, category and rating
+- Restaurant can be sorted by English name, region, category and rating
 - Getting more information such as phone, address and description when click restaurant
 - creating a new restaurant
 - Delete restaurant from main page
