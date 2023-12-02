@@ -9,6 +9,9 @@ const messageHandler = require("./middlewares/messageHandler")
 const router = require("./routes");
 const errorHandler = require('./middlewares/errorHandler')
 
+if (process.env.NODE_ENV === "development") {
+  require("dotenv").config();
+}
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
@@ -19,7 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(
   session({
-    secret: "ThisIsSecret",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
   })
