@@ -1,13 +1,14 @@
 # Restaurant List
 A simple web application for organizing favorite restaurant by searching, creating and deleting restaurant.
 
-![listening page](https://github.com/PeiTzuChen/restaurants-list/blob/main/Image/restaurant.jpg)
+![listening page](./Image/restaurants.jpg)
 
 ## Features
 - Searching restaurants by name or category
+- restaurant can be sorted by English name, region, category and rating
 - Getting more information such as phone, address and description when click restaurant
+- creating a new restaurant
 - Delete restaurant from main page
-
 
 ### Getting started
 
@@ -19,13 +20,32 @@ A simple web application for organizing favorite restaurant by searching, creati
 npm install
 ```
 
-3.Then,
+3.Use Sequelize as ORM to manage MySQL 
+
+```
+npx sequelize db:create
+```
+```
+npx sequelize db:migrate
+```
+```
+npx sequelize db:seed
+```
+
+4. Setup ENV under .env.example file
+
+```
+SESSION_SECRET= "XXXXX"
+```
+5.Check environment variable NODE_ENV=development or ignore this step if under MAC/Linux systems
+
+6.Then,
 
 ```
 npm run start
 ```
 
-4.Application is running in
+4.Application is running successfully when you see
 
 ```
 http://localhost:3000
@@ -46,3 +66,7 @@ ctrl + c
 - [Sequelize](https://www.npmjs.com/package/sequelize) 6.30.0
 - [Sequelize-cli](https://www.npmjs.com/package/sequelize-cli) 6.6.0
 - [Method-override](https://www.npmjs.com/package/method-override) 3.0.0
+- [connect-flash](https://www.npmjs.com/package/connect-flash) 0.1.1
+- [dotenv](https://www.npmjs.com/package/dotenv) 16.0.3
+- [express-session](https://www.npmjs.com/package/express-session) 1.17.3
+  
