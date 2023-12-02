@@ -1,5 +1,5 @@
 <!-- search bar -->
-<div class="container search-bar">
+<div class="container search-bar mb-3">
   <div class="search-bar-outer">
     <div class="search-bar-inner">
 
@@ -42,11 +42,13 @@
   </div>
 </div>
 
-{{#if message}}<div id="flash-message" class="text-center mt-3 ">{{message}}</div> {{/if}}
-{{#if error}}<div id="flash-message" class="text-center mt-3 ">{{error}}</div> {{/if}}
+{{> message}}
 
+
+{{#if searchTerm}}
 {{#if restaurants}}
-<div class="text-center mb-3 mt-3">{{message_onsearch}}</div>
+<div class="text-center mb-3 mt-3">找出符合查詢結果如下</div>
+{{/if}}
 {{/if}}
 
 <div class="text-center mt-4">
@@ -168,4 +170,4 @@
   </div>
   {{/if}}
 
-   <script src="javascripts/index.js"></script>
+   <script src="/javascripts/listeningPage.js"></script>

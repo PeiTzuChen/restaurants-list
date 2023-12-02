@@ -1,7 +1,6 @@
 "use strict";
 
 const restaurants = require("../public/jsons/restaurant.json").results;
-console.log(restaurants)
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
