@@ -2,11 +2,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const Restaurant = db.Restaurant;
-
+const pageSize = 6;
 router.get("/", (req, res, next) => {
   //listening page
-  console.log('進入router')
-  const pageSize = 6;
   const pageNumber = parseInt(req.query.page) || 1;
   return Restaurant.findAndCountAll({
     raw: true,
@@ -79,12 +77,11 @@ router.get("/search", (req, res, next) => {
           restaurant.category.toLowerCase().includes(searchTerm) ||
           restaurant.name.toLowerCase().includes(searchTerm)
       );
-      const pagesize = 6;
-      const totalPage = Math.ceil(restaurantsFiltered.length / pagesize);
+      const totalPage = Math.ceil(restaurantsFiltered.length / pageSize);
       res.render("listening", {
         restaurants: restaurantsFiltered.slice(
-          (pageNumber - 1) * pagesize,
-          (pageNumber - 1) * pagesize + 6
+          (pageNumber - 1) * pageSize,
+          (pageNumber - 1) * pageSize + 6
         ),
         searchTerm,
         order,
@@ -142,18 +139,27 @@ router.get("/:id/edit", (req, res, next) => {
 
 router.post("/", (req, res, next) => {
   //create restaurant
-  const restaurant = req.body;
-  const rating = Number(restaurant.rating);
+  const {
+    name,
+    name_en,
+    category,
+    image,
+    location,
+    phone,
+    google_map,
+    description,
+  } = req.body;
+  const rating = Number(req.body.rating);
   return Restaurant.create({
-    name: restaurant.name,
-    name_en: restaurant.name_en,
-    category: restaurant.category,
-    image: restaurant.image,
-    location: restaurant.location,
-    phone: restaurant.phone,
-    google_map: restaurant.google_map,
+    name,
+    name_en,
+    category,
+    image,
+    location,
+    phone,
+    google_map,
     rating: rating,
-    description: restaurant.description,
+    description,
   })
     .then(() => {
       req.flash("success", "新增成功");
