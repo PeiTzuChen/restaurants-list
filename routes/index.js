@@ -3,6 +3,7 @@ const router = express.Router();
 const LocalStrategy = require("passport-local");
 const passport = require("passport");
 const restaurants = require("./restaurants");
+const authHandler = require("../middlewares/authHandler");
 const users = require("./users");
 const db = require("../models");
 const User = db.User;
@@ -47,7 +48,7 @@ passport.deserializeUser((id, done) => {
   done(null, id);
 });
 
-router.use("/restaurants", restaurants);
+router.use("/restaurants", authHandler, restaurants);
 router.use("/users", users);
 
 router.get("/", (req, res) => {
@@ -70,4 +71,14 @@ router.post(
     failureFlash: true,
   })
 );
+
+router.post("/logout", (req, res, next) =>{
+  req.logout( (error)=> {
+    if (error) {
+      return next(error);
+    }
+    res.redirect("/login");
+  });
+});
+
 module.exports = router;
