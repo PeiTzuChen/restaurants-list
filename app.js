@@ -11,7 +11,7 @@ const session = require("express-session");
 const messageHandler = require("./middlewares/messageHandler")
 const router = require("./routes");
 const errorHandler = require('./middlewares/errorHandler')
-const passport = require("passport");
+const passport = require("./config/passport");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
 app.set("view engine", ".hbs");
