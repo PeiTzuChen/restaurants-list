@@ -7,6 +7,7 @@ router.get("/", (req, res, next) => {
   //listening page
   const pageNumber = parseInt(req.query.page) || 1;
   return Restaurant.findAndCountAll({
+    where: { userId: req.user },
     raw: true,
     limit: pageSize,
     offset: (pageNumber - 1) * pageSize,
@@ -33,6 +34,7 @@ router.get("/search", (req, res, next) => {
   const { keyword, order, page } = req.query;
   const searchTerm = keyword.trim().toLowerCase();
   const pageNumber = parseInt(page) || 1;
+  const userId = req.user;
   let orderState = [];
   let orderValue = {};
   switch (
@@ -70,6 +72,7 @@ router.get("/search", (req, res, next) => {
   return Restaurant.findAll({
     raw: true,
     order: [orderState],
+    where: { userId },
   })
     .then((restaurants) => {
       const restaurantsFiltered = restaurants.filter(
@@ -99,18 +102,21 @@ router.get("/search", (req, res, next) => {
 });
 
 router.get("/new", (req, res) => {
-  //create restaurant page
   res.render("new");
 });
 
 router.get("/:id", (req, res, next) => {
-  //restaurant detail page
   const id = req.params.id;
+  const userId = req.user;
   return Restaurant.findByPk(id, {
     raw: true,
   })
     .then((restaurant) => {
-      res.render("detail", {
+      if (restaurant.userId !== userId) {
+        req.flash("error", "權限不足");
+        return res.redirect("/restaurants");
+      }
+      return res.render("detail", {
         restaurant,
       });
     })
@@ -121,12 +127,16 @@ router.get("/:id", (req, res, next) => {
 });
 
 router.get("/:id/edit", (req, res, next) => {
-  // edit restaurant page
   const id = req.params.id;
+  const userId = req.user;
   return Restaurant.findByPk(id, {
     raw: true,
   })
     .then((restaurant) => {
+      if (restaurant.userId !== userId) {
+        req.flash("error", "權限不足");
+        return res.redirect("/restaurants");
+      }
       return res.render("edit", {
         restaurant,
       });
@@ -149,6 +159,9 @@ router.post("/", (req, res, next) => {
     google_map,
     description,
   } = req.body;
+
+  const userId = req.user;
+
   const rating = Number(req.body.rating);
   return Restaurant.create({
     name,
@@ -160,6 +173,7 @@ router.post("/", (req, res, next) => {
     google_map,
     rating: rating,
     description,
+    userId,
   })
     .then(() => {
       req.flash("success", "新增成功");
@@ -175,21 +189,31 @@ router.put("/:id", (req, res, next) => {
   //edit restaurant
   const id = req.params.id;
   const body = req.body;
-  return Restaurant.update(
-    {
-      name: body.name,
-      category: body.category,
-      location: body.location,
-      google_map: body.google_map,
-      phone: body.phone,
-      description: body.description,
-      image: body.image,
-    },
-    { where: { id } }
-  )
-    .then(() => {
-      req.flash("success", "編輯成功");
-      return res.redirect(`/restaurants/${id}`);
+  const userId = req.user;
+
+  return Restaurant.findByPk(id, {
+    attributes: ["id", "name", "userId"],
+  })
+    .then((restaurant) => {
+      console.log("show", restaurant);
+      if (restaurant.userId !== userId) {
+        req.flash("error", "權限不足");
+        return res.redirect("/restaurants");
+      }
+      return restaurant
+        .update({
+          name: body.name,
+          category: body.category,
+          location: body.location,
+          google_map: body.google_map,
+          phone: body.phone,
+          description: body.description,
+          image: body.image,
+        })
+        .then(() => {
+          req.flash("success", "編輯成功");
+          return res.redirect(`/restaurants/${id}`);
+        });
     })
     .catch((error) => {
       error.errorMessage = "編輯失敗";
@@ -198,12 +222,18 @@ router.put("/:id", (req, res, next) => {
 });
 
 router.delete("/:id", (req, res, next) => {
-  //delete restaurant
   const id = req.params.id;
-  return Restaurant.destroy({ where: { id } })
-    .then(() => {
-      req.flash("success", "刪除成功");
-      return res.redirect("/restaurants");
+  const userId = req.user;
+  return Restaurant.findByPk(id, { attributes: ["id", "name", "userId"] })
+    .then((restaurant) => {
+      if (restaurant.userId !== userId) {
+        req.flash("error", "權限不足");
+        return res.redirect("/restaurants");
+      }
+      return restaurant.destroy().then(() => {
+        req.flash("success", "刪除成功");
+        res.redirect("/restaurants");
+      });
     })
     .catch((error) => {
       error.errorMessage = "刪除失敗";
