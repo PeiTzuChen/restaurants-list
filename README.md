@@ -1,13 +1,15 @@
 # Restaurant List
-A simple web application for organizing favorite restaurant by searching, creating and deleting restaurant.
+A simple web application for favorite restaurant list by searching, creating and deleting restaurant.
 
 ![listening page](./Image/restaurants.jpg)
 
 ## Features
-- Searching restaurants by name or category
+- login with FB or register account by email and password which are necessary
+- each user has own favorite restaurant list
+- Search restaurants by name or category
 - Restaurant can be sorted by English name, region, category and rating
-- Getting more information such as phone, address and description when click restaurant
-- creating a new restaurant
+- Get more information such as phone, address and description when click restaurant
+- create a new restaurant
 - Delete restaurant from main page
 
 ### Getting started
@@ -29,13 +31,16 @@ npx sequelize db:create
 npx sequelize db:migrate
 ```
 ```
-npx sequelize db:seed
+npx sequelize db:seed:all
 ```
 
 4. Setup ENV under .env.example file
 
 ```
-SESSION_SECRET= "XXXXX"
+SESSION_SECRET= 
+FACEBOOK_CLEINT_ID= 
+FACEBOOK_CLIENT_SECRET= 
+FACEBOOK_CALLBACK_URL=
 ```
 5.Check environment variable NODE_ENV=development or ignore this step if under MAC/Linux systems
 
@@ -69,4 +74,8 @@ ctrl + c
 - [connect-flash](https://www.npmjs.com/package/connect-flash) 0.1.1
 - [dotenv](https://www.npmjs.com/package/dotenv) 16.0.3
 - [express-session](https://www.npmjs.com/package/express-session) 1.17.3
-  
+- [passport-facebook](https://www.npmjs.com/package/passport-facebook) 3.0.0
+- [passport-local](https://www.npmjs.com/package/passport-local) 1.0.0
+- [passport](https://www.npmjs.com/package/passport) 0.7.0
+- [bcryptjs](https://www.npmjs.com/package/bcryptjs) 2.4.3
+
